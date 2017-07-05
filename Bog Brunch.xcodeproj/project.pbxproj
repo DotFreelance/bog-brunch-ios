@@ -426,6 +426,7 @@
 				4A1D66A31F09850600971E0F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4A1D66A41F09850600971E0F /* Build configuration list for PBXNativeTarget "Bog BrunchTests" */ = {
 			isa = XCConfigurationList;
@@ -434,6 +435,7 @@
 				4A1D66A61F09850600971E0F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
