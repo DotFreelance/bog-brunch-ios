@@ -55,7 +55,7 @@ struct PhysicsCategory {
 
 // MARK: - GameScene Class
 class GameScene: SKScene, SKPhysicsContactDelegate {
-  private var player : SKSpriteNode?
+  private var player : Player?
   private var sceneEdge : SKPhysicsBody?
   private var numTouches : UInt = 0
   private var playerSpeed : CGFloat = 0.0
@@ -67,9 +67,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
   
   override func didMove(to view: SKView) {
     // Scene loaded here, set up the scene
-    player = self.childNode(withName: "player") as? SKSpriteNode
+    player = self.childNode(withName: "player") as? Player
     self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
-    stopRadius = sqrt(pow((player?.size.width)!, 2) + pow((player?.size.height)!, 2)) / 2
+    let playerWidth = player?.size.width
+    let playerHeight = player?.size.height
+    stopRadius = sqrt(pow((playerWidth)!, 2) + pow((playerHeight)!, 2)) / 2
     playerDirection = (player?.position)!
     
     physicsWorld.contactDelegate = self
@@ -169,7 +171,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
       tongueTip.position = CGPoint(x: -2.0, y: 32.0)
       let tongueBase = SKShapeNode(rectOf: CGSize(width: 8.0, height: 10.0))
       tongueBase.position = CGPoint(x: -2.0, y: 32.0)
-      let tongueColor = SKColor(colorLiteralRed: 1.0, green: 0.6, blue: 0.6, alpha: 1.0)
+      let tongueColor = SKColor(red: 1.0, green: 0.6, blue: 0.6, alpha: 1.0)
       tongueTip.fillColor = tongueColor
       tongueTip.strokeColor = tongueColor
       tongueBase.fillColor = tongueColor
