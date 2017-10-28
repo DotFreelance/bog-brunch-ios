@@ -55,7 +55,7 @@ struct PhysicsCategory {
 
 // MARK: - GameScene Class
 class GameScene: SKScene, SKPhysicsContactDelegate {
-  private var player : Player?
+  private var player : SKSpriteNode?
   private var sceneEdge : SKPhysicsBody?
   private var numTouches : UInt = 0
   private var playerSpeed : CGFloat = 0.0
@@ -67,7 +67,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
   
   override func didMove(to view: SKView) {
     // Scene loaded here, set up the scene
-    player = self.childNode(withName: "player") as? Player
+    player = self.childNode(withName: "player") as? SKSpriteNode
     self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
     let playerWidth = player?.size.width
     let playerHeight = player?.size.height
