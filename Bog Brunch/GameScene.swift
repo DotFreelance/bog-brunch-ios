@@ -7,40 +7,6 @@
 //
 
 import SpriteKit
-import GameplayKit
-
-// MARK: - Vector Math Overrides/Functions
-func + (left: CGPoint, right: CGPoint) -> CGPoint {
-  return CGPoint(x: left.x + right.x, y: left.y + right.y)
-}
-
-func - (left: CGPoint, right: CGPoint) -> CGPoint {
-  return CGPoint(x: left.x - right.x, y: left.y - right.y)
-}
-
-func * (point: CGPoint, scalar: CGFloat) -> CGPoint {
-  return CGPoint(x: point.x * scalar, y: point.y * scalar)
-}
-
-func / (point: CGPoint, scalar: CGFloat) -> CGPoint {
-  return CGPoint(x: point.x / scalar, y: point.y / scalar)
-}
-
-#if !(arch(x86_64) || arch(arm64))
-  func sqrt(a: CGFloat) -> CGFloat {
-    return CGFloat(sqrtf(Float(a)))
-  }
-#endif
-
-extension CGPoint {
-  func length() -> CGFloat {
-    return sqrt(x*x + y*y)
-  }
-  
-  func normalized() -> CGPoint {
-    return self / length()
-  }
-}
 
 // MARK: - Constants
 struct PhysicsCategory {
@@ -55,24 +21,18 @@ struct PhysicsCategory {
 
 // MARK: - GameScene Class
 class GameScene: SKScene, SKPhysicsContactDelegate {
-  private var player : SKSpriteNode?
+  // MARK: - Properties
+  private var player : Player = Player()
   private var sceneEdge : SKPhysicsBody?
   private var numTouches : UInt = 0
-  private var playerSpeed : CGFloat = 0.0
-  private var playerDirection : CGPoint?
-  private var playerMoveTouch : UITouch?
-  private var playerAttacking : Bool = false
-  private var stopRadius : CGFloat = 0.0
+  private var prevTime : Double = 0.0
   
-  
+  // MARK: - Scene Activity
   override func didMove(to view: SKView) {
     // Scene loaded here, set up the scene
-    player = self.childNode(withName: "player") as? SKSpriteNode
+    self.backgroundColor = UIColor(red:0.81, green:0.92, blue:0.91, alpha:1.0)
+    player = Player(node:self.childNode(withName: "player") as! SKSpriteNode)
     self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
-    let playerWidth = player?.size.width
-    let playerHeight = player?.size.height
-    stopRadius = sqrt(pow((playerWidth)!, 2) + pow((playerHeight)!, 2)) / 2
-    playerDirection = (player?.position)!
     
     physicsWorld.contactDelegate = self
     
@@ -81,26 +41,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     sceneEdge?.usesPreciseCollisionDetection = true
   }
   
-  // MARK: - Player Control
-  
+  // MARK: - Touch Activity
   func touchDown(atPoint pos : CGPoint, withTouch touch : UITouch) {
     // Touch presses down
     numTouches += 1
     
     if numTouches == 1 {
-      playerMoveTouch = touch
-      playerMove(toPoint: pos)
+      player.moveTouch = touch
+      player.move(toPoint: pos)
     }
   }
   
   func touchMoved(toPoint pos : CGPoint, withTouch touch : UITouch) {
     // Touch is moved while pressed
-    if playerMoveTouch == touch {
-      playerMove(toPoint: pos)
-    } else if playerMoveTouch == nil {
+    if player.moveTouch == touch {
+      player.move(toPoint: pos)
+    } else if player.moveTouch == nil {
       // We can safely claim this touch to be our new move touch
-      playerMoveTouch = touch
-      playerMove(toPoint: pos)
+      player.moveTouch = touch
+      player.move(toPoint: pos)
     }
   }
   
@@ -108,11 +67,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Touch is lifted
     numTouches -= 1
     
-    if playerMoveTouch == touch || numTouches == 0 {
-      playerStop()
-      playerMoveTouch = nil
+    if player.moveTouch == touch || numTouches == 0 {
+      player.stop()
+      player.moveTouch = nil
     } else if numTouches >= 1 {
-      playerAttack()
+      player.attack()
     }
   }
   
@@ -132,64 +91,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     for t in touches { self.touchUp(atPoint: t.location(in: self), withTouch: t) }
   }
   
-  
   // MARK: - Frame Update
-  
   override func update(_ currentTime: TimeInterval) {
+    let frameTime = currentTime - prevTime
     // Deltas between current position and move to position
-    let delta = (playerDirection)! - (player?.position)!
-    player?.zRotation = atan2(delta.x, -delta.y) + CGFloat.pi
+    let delta = (player.moveToPoint)! - player.spriteNode.position
+    player.spriteNode.zRotation = atan2(delta.x, -delta.y) + CGFloat.pi
     
     let hyp = delta.length()
-    if hyp > stopRadius && playerSpeed > 0.0 {
-      let scaleFactor = hyp / playerSpeed
-      player?.position.x += delta.x / scaleFactor
-      player?.position.y += delta.y / scaleFactor
+    if hyp > player.stopRadius && player.speed > 0.0 {
+      let scaleFactor = hyp / (player.speed * CGFloat(frameTime))
+      player.spriteNode.position.x += delta.x / scaleFactor
+      player.spriteNode.position.y += delta.y / scaleFactor
     }
-  }
-  
-  // MARK: - Player Action
-  private func playerMove(toPoint pos : CGPoint) {
-    // Set the move to point if not attacking
-    if !playerAttacking {
-      playerDirection = pos
-      playerSpeed = 3.0;
-    }
-  }
-  
-  private func playerStop(){
-    playerSpeed = 0.0;
-  }
-  
-  private func playerAttack() {
-    // Setup player for attack
-    if(!playerAttacking) {
-      playerAttacking = true
-      playerStop()
-      // Setup the tongue geometry
-      let tongueTip = SKShapeNode(circleOfRadius: 8.0)
-      tongueTip.position = CGPoint(x: -2.0, y: 32.0)
-      let tongueBase = SKShapeNode(rectOf: CGSize(width: 8.0, height: 10.0))
-      tongueBase.position = CGPoint(x: -2.0, y: 32.0)
-      let tongueColor = SKColor(red: 1.0, green: 0.6, blue: 0.6, alpha: 1.0)
-      tongueTip.fillColor = tongueColor
-      tongueTip.strokeColor = tongueColor
-      tongueBase.fillColor = tongueColor
-      tongueBase.strokeColor = tongueColor
-      
-      player?.addChild(tongueTip)
-      player?.addChild(tongueBase)
-      
-      // Setup and run the attack animation
-      let tongueTipAction = SKAction.move(by: CGVector(dx: 0.0, dy: 160.0), duration: 0.3)
-      let tongueBaseAction = SKAction.group([SKAction.scaleX(by: 1.0, y: 16.0, duration: 0.3), SKAction.moveBy(x: 0.0, y: 80.0, duration: 0.3)])
-      
-      let tongueTipDone = SKAction.removeFromParent()
-      let tongueBaseDone = SKAction.removeFromParent()
-      
-      tongueBase.run(SKAction.sequence([tongueBaseAction, tongueBaseDone]))
-      tongueTip.run(SKAction.sequence([tongueTipAction, tongueTipDone]), completion: {() -> Void in self.playerAttacking = false})
-    }
+    self.prevTime = currentTime
   }
   
   // MARK: - Physics
