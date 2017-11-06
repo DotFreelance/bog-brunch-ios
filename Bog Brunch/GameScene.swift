@@ -22,7 +22,11 @@ struct PhysicsCategory {
 // MARK: - GameScene Class
 class GameScene: SKScene, SKPhysicsContactDelegate {
   // MARK: - Properties
+  private var interactiveLayer : SKNode = SKNode()
+  private var uiLayer : SKNode = SKNode()
   private var player : Player = Player()
+  private lazy var gameTimer : GameTimer = GameTimer()
+  private lazy var insectSpawner : InsectSpawner = InsectSpawner(withGameTimerService: gameTimer, withGameScene: self)
   private var sceneEdge : SKPhysicsBody?
   private var numTouches : UInt = 0
   private var prevTime : Double = 0.0
@@ -31,14 +35,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
   override func didMove(to view: SKView) {
     // Scene loaded here, set up the scene
     self.backgroundColor = UIColor(red:0.81, green:0.92, blue:0.91, alpha:1.0)
-    player = Player(node:self.childNode(withName: "player") as! SKSpriteNode)
     self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
-    
     physicsWorld.contactDelegate = self
     
     sceneEdge?.categoryBitMask = PhysicsCategory.Wall
     sceneEdge?.contactTestBitMask = PhysicsCategory.Player
     sceneEdge?.usesPreciseCollisionDetection = true
+    
+    // Start the services
+    gameTimer.start()
+    insectSpawner.initSpawn()
+    
+    // Setup the player
+    player = Player(node:self.childNode(withName: "player") as! SKSpriteNode)
   }
   
   // MARK: - Touch Activity
@@ -94,6 +103,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
   // MARK: - Frame Update
   override func update(_ currentTime: TimeInterval) {
     let frameTime = currentTime - prevTime
+    /*
+     * Player Movement
+     */
     // Deltas between current position and move to position
     let delta = (player.moveToPoint)! - player.spriteNode.position
     player.spriteNode.zRotation = atan2(delta.x, -delta.y) + CGFloat.pi
@@ -103,7 +115,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
       let scaleFactor = hyp / (player.speed * CGFloat(frameTime))
       player.spriteNode.position.x += delta.x / scaleFactor
       player.spriteNode.position.y += delta.y / scaleFactor
+      containPlayer(sprite: player.spriteNode, container: self);
     }
+    
+    /*
+     * Insect Movement
+     */
+    insectSpawner.moveInsects(frameTime: frameTime)
+    
     self.prevTime = currentTime
   }
   

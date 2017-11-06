@@ -17,6 +17,9 @@
 		4A1D66921F09850600971E0F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A1D66901F09850600971E0F /* LaunchScreen.storyboard */; };
 		4A1D669D1F09850600971E0F /* Bog_BrunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1D669C1F09850600971E0F /* Bog_BrunchTests.swift */; };
 		4A9208EF1F9CF8E40098C897 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9208EE1F9CF8E40098C897 /* Player.swift */; };
+		4A93A4371FAFA36E009F1E20 /* GameTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A93A4361FAFA36E009F1E20 /* GameTimer.swift */; };
+		4A93A4391FAFD38C009F1E20 /* InsectSpawner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A93A4381FAFD38C009F1E20 /* InsectSpawner.swift */; };
+		4A93A43C1FAFF468009F1E20 /* GameUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A93A43B1FAFF468009F1E20 /* GameUtilities.swift */; };
 		4AA27F981FAF84D900BB18C6 /* Insects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA27F971FAF84D900BB18C6 /* Insects.swift */; };
 		4AE9FF271FAC0CED0091F939 /* VectorMathOverrides.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE9FF261FAC0CED0091F939 /* VectorMathOverrides.swift */; };
 /* End PBXBuildFile section */
@@ -46,6 +49,9 @@
 		4A1D669C1F09850600971E0F /* Bog_BrunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bog_BrunchTests.swift; sourceTree = "<group>"; };
 		4A1D669E1F09850600971E0F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A9208EE1F9CF8E40098C897 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		4A93A4361FAFA36E009F1E20 /* GameTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTimer.swift; sourceTree = "<group>"; };
+		4A93A4381FAFD38C009F1E20 /* InsectSpawner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsectSpawner.swift; sourceTree = "<group>"; };
+		4A93A43B1FAFF468009F1E20 /* GameUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameUtilities.swift; sourceTree = "<group>"; };
 		4AA27F971FAF84D900BB18C6 /* Insects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insects.swift; sourceTree = "<group>"; };
 		4AE9FF261FAC0CED0091F939 /* VectorMathOverrides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorMathOverrides.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -89,15 +95,16 @@
 		4A1D66801F09850500971E0F /* Bog Brunch */ = {
 			isa = PBXGroup;
 			children = (
+				4A93A43A1FAFF268009F1E20 /* GameServices */,
 				4A9D2CF31FAF8DD0007D4D8F /* CoreGame */,
 				4A9D2CF21FAF8DA8007D4D8F /* Storyboards */,
 				4A9D2CF11FAF8D80007D4D8F /* Scenes */,
 				4A1D66811F09850500971E0F /* AppDelegate.swift */,
-				4A1D66871F09850600971E0F /* GameScene.swift */,
 				4A1D66891F09850600971E0F /* GameViewController.swift */,
 				4A1D668E1F09850600971E0F /* Assets.xcassets */,
 				4A1D66931F09850600971E0F /* Info.plist */,
 				4AE9FF261FAC0CED0091F939 /* VectorMathOverrides.swift */,
+				4A93A43B1FAFF468009F1E20 /* GameUtilities.swift */,
 			);
 			path = "Bog Brunch";
 			sourceTree = "<group>";
@@ -109,6 +116,16 @@
 				4A1D669E1F09850600971E0F /* Info.plist */,
 			);
 			path = "Bog BrunchTests";
+			sourceTree = "<group>";
+		};
+		4A93A43A1FAFF268009F1E20 /* GameServices */ = {
+			isa = PBXGroup;
+			children = (
+				4A1D66871F09850600971E0F /* GameScene.swift */,
+				4A93A4361FAFA36E009F1E20 /* GameTimer.swift */,
+				4A93A4381FAFD38C009F1E20 /* InsectSpawner.swift */,
+			);
+			name = GameServices;
 			sourceTree = "<group>";
 		};
 		4A9D2CF11FAF8D80007D4D8F /* Scenes */ = {
@@ -250,8 +267,11 @@
 				4A9208EF1F9CF8E40098C897 /* Player.swift in Sources */,
 				4AA27F981FAF84D900BB18C6 /* Insects.swift in Sources */,
 				4A1D66881F09850600971E0F /* GameScene.swift in Sources */,
+				4A93A4371FAFA36E009F1E20 /* GameTimer.swift in Sources */,
+				4A93A4391FAFD38C009F1E20 /* InsectSpawner.swift in Sources */,
 				4A1D668A1F09850600971E0F /* GameViewController.swift in Sources */,
 				4A1D66821F09850500971E0F /* AppDelegate.swift in Sources */,
+				4A93A43C1FAFF468009F1E20 /* GameUtilities.swift in Sources */,
 				4AE9FF271FAC0CED0091F939 /* VectorMathOverrides.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

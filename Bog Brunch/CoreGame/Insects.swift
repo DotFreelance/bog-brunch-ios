@@ -15,11 +15,22 @@ struct InsectPointValues {
   static let WASP_POINT_VALUE : Int = 0
 }
 
-class Insect {
+let INSECT_MAX_VELOCITY : Int = 200
+
+class Insect : Hashable {
   let name : String
   let sprite : SKSpriteNode
   let pointValue : Int
   let isEnemy : Bool
+  var vx : CGFloat = 0.0
+  var vy : CGFloat = 0.0
+  var hashValue : Int {
+    return self.name.hashValue ^
+      self.sprite.hashValue ^
+      self.pointValue.hashValue ^
+      self.vx.hashValue ^
+      self.vy.hashValue
+  }
   
   init(sprite : SKSpriteNode, name : String, points : Int, isEnemy : Bool) {
     self.sprite = sprite
@@ -27,6 +38,20 @@ class Insect {
     self.pointValue = points
     self.isEnemy = isEnemy
     self.sprite.setScale(0.2)
+  }
+  
+  func moveRandom() {
+    self.vx = CGFloat(random(-INSECT_MAX_VELOCITY...INSECT_MAX_VELOCITY))
+    self.vy = CGFloat(random(-INSECT_MAX_VELOCITY...INSECT_MAX_VELOCITY))
+  }
+  
+  static func == (lhs: Insect, rhs: Insect) -> Bool {
+    return lhs.name == rhs.name &&
+      lhs.sprite == rhs.sprite &&
+      lhs.pointValue == rhs.pointValue &&
+      lhs.isEnemy == rhs.isEnemy &&
+      lhs.vx == rhs.vx &&
+      lhs.vy == rhs.vy
   }
 }
 
