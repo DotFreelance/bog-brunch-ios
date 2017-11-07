@@ -49,28 +49,30 @@ func containPlayer(sprite : SKSpriteNode, container : SKScene) {
 func containInsect(sprite : SKSpriteNode, container : SKScene) -> String {
   
   var collision = "";
+  let leftMargin = container.position.x - container.size.width / 2.0 + 20;
+  let bottomMargin = container.position.y - container.size.height / 2.0 + 20;
+  let rightMargin = container.size.width / 2.0 - 20;
+  let topMargin = container.size.height / 2.0 - 20;
   
-  //Left
-  if (sprite.position.x - sprite.size.width * sprite.anchorPoint.x < container.position.x - container.size.width / 2.0) {
-    sprite.position.x = (container.position.x - container.size.width / 2.0) + sprite.size.width * sprite.anchorPoint.x;
+  if (sprite.position.x < leftMargin) {
+    sprite.position.x = leftMargin;
     collision = "left";
   }
   
-  //Bottom
-  if (sprite.position.y - sprite.size.height * sprite.anchorPoint.y < container.position.y - container.size.height / 2.0) {
-    sprite.position.y = (container.position.y - container.size.height / 2.0) + sprite.size.height * sprite.anchorPoint.y;
+  if (sprite.position.y < bottomMargin) {
+    sprite.position.y = bottomMargin;
     collision = "bottom";
   }
   
   //Right
-  if (sprite.position.x + sprite.size.width * sprite.anchorPoint.x > container.size.width / 2.0) {
-    sprite.position.x = (container.size.width / 2.0) - sprite.size.width * sprite.anchorPoint.x;
+  if (sprite.position.x > rightMargin) {
+    sprite.position.x = rightMargin;
     collision = "right";
   }
   
   //Top
-  if (sprite.position.y + sprite.size.height * sprite.anchorPoint.y > container.size.height / 2.0) {
-    sprite.position.y = (container.size.height / 2.0) - sprite.size.height * sprite.anchorPoint.y;
+  if (sprite.position.y > topMargin) {
+    sprite.position.y = topMargin;
     collision = "top";
   }
   

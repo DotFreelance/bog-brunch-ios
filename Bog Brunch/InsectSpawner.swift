@@ -34,6 +34,10 @@ class InsectSpawner {
     scene.addChild(self.insectLayer)
   }
   
+  func setLayerZHeight(zHeight : CGFloat) {
+    self.insectLayer.zPosition = zHeight
+  }
+  
   func initSpawn() {
     for _ in 1...self.maxFlies {
       self.spawn(aNewInsect: Fly())

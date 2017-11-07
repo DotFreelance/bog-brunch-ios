@@ -22,7 +22,6 @@ struct PhysicsCategory {
 // MARK: - GameScene Class
 class GameScene: SKScene, SKPhysicsContactDelegate {
   // MARK: - Properties
-  private var interactiveLayer : SKNode = SKNode()
   private var uiLayer : SKNode = SKNode()
   private var player : Player = Player()
   private lazy var gameTimer : GameTimer = GameTimer()
@@ -48,6 +47,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Setup the player
     player = Player(node:self.childNode(withName: "player") as! SKSpriteNode)
+    
+    // Set the layer heights
+    insectSpawner.setLayerZHeight(zHeight: 10)
+    player.spriteNode.zPosition = 20
+    self.uiLayer.zPosition = 50
   }
   
   // MARK: - Touch Activity
